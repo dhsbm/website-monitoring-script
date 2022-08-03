@@ -1,4 +1,4 @@
-import { getWebId, report } from './util'
+import { report } from './util'
 
 // 处理请求拦截和请求异常
 export default function () {
@@ -28,9 +28,7 @@ function rewriteXML() {
       const endTime = Date.now()
       const success = isSuccess(this.status)
       const reportData = {
-        web_id: getWebId(),
         kind: 3,
-        url: location.hostname + location.pathname,
         time: startTime,
         send_url: url,
         way,
@@ -48,9 +46,7 @@ function rewriteXML() {
       // 上报接口异常
       if (!success) {
         const reportData = {
-          web_id: getWebId(),
           kind: 0,
-          url: location.hostname + location.pathname,
           type: 2,
           time: endTime,
           message: `${this.status} ${this.statusText}`,
@@ -78,9 +74,7 @@ function rewriteFeact() {
       res.text().then((data) => {
         const success = isSuccess(res.status)
         const reportData = {
-          web_id: getWebId(),
           kind: 3,
-          url: location.hostname + location.pathname,
           time: startTime,
           send_url: res.url,
           way: (config?.method || 'GET').toUpperCase(),
@@ -95,9 +89,7 @@ function rewriteFeact() {
         // 采集接口异常
         if (!success) {
           const reportData = {
-            web_id: getWebId(),
             kind: 0,
-            url: location.hostname + location.pathname,
             type: 2,
             time: endTime,
             message: `${res.status} ${res.statusText}`,

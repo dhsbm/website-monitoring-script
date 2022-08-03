@@ -1,29 +1,27 @@
-import { getWebId, report } from './util'
+import { report } from './util'
 
 export default function () {
   window.addEventListener(
     'error',
     (e) => {
+      console.log(e)
+
       let reportData
       // 资源加载异常
-      if (e.target && e.target.src) {
-        const src = getErrorSrc(e.target.src)
+      if (e.target && (e.target.src || e.target.href)) {
+        const src = getErrorSrc(e.target.src || e.target.href)
         reportData = {
-          web_id: getWebId(),
           kind: 0,
-          url: location.hostname + location.pathname,
           type: 1,
           time: Date.now(),
           message: `Not Found: ${src}`,
-          stack: `Not Found: ${e.target.src}`,
+          stack: `Not Found: ${e.target.src || e.target.href}`,
         }
+        console.dir(e.target)
       } else {
         // js异常
-        // console.log(e)
         reportData = {
-          web_id: getWebId(),
           kind: 0,
-          url: location.hostname + location.pathname,
           type: 0,
           time: Date.now(),
           message: getErrorType(e.error.stack) + e.error.message,
@@ -41,9 +39,7 @@ export default function () {
     'unhandledrejection',
     (e) => {
       const reportData = {
-        web_id: getWebId(),
         kind: 0,
-        url: location.hostname + location.pathname,
         type: 0,
         time: Date.now(),
         message: getErrorType(e.reason.stack) + e.reason.message,
@@ -67,9 +63,7 @@ export default function () {
     // 全屏没有元素，触发白屏异常
     if (emptyPoints == 18) {
       const reportData = {
-        web_id: getWebId(),
         kind: 0,
-        url: location.hostname + location.pathname,
         type: 0,
         time: Date.now(),
         message: 'White screen',
