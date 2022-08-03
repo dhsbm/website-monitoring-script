@@ -1,10 +1,10 @@
 # 用法
 
-在项目的主入口文件中导入 sdk
+## 在项目的主入口文件中导入 sdk
 
-`import Tracker from 'xymonitor'`
+`import Tracker from 'sdkPackageName'`
 
-创建实例
+### 创建实例
 
 `const tracker = new Tracker(options)`
 
@@ -18,16 +18,23 @@ options 是一个对象，接受以下字段：
 - requestTracker<boolean>:开关，控制是否监控页面中的请求，包括 AJAX 请求和 fetch 请求
 - performanceTracker<boolean>:开关，控制是否监控页面的加载性能
 
-实例对象 tracker 可调用的方法：
+### 创建一个默认开启全部功能的实例：
 
-- tracker.setExtra(obj)
+`const tracker = Tracker.complete(requestUrl)`
+此方法会返回一个 Tracker 实例对象，已默认开启全部监控功能，只需要传一个 requestUrl 参数用于覆盖默认的上报信息接口
+
+## 实例对象 tracker 可调用的方法：
+
+- tracker.setExtra(obj)  
   该方法接受一个对象作为参数，用于在每一条上报信息中添加额外的信息
-- tracker.setUUID(str)
+- tracker.setUUID(str)  
   该方法接受一个 string 类型的值作为参数，用于在每一条上报信息中添加一个 uuid 字段，如果不传默认 uuid 字段值为空字符串
-- tracker.sendTracker(obj)
+- tracker.sendTracker(obj)  
   该方法接受一个对象作为参数，调用该方法会往后端发送一条上报信息，其中 subType 字段的值为 self-report，参数 obj 中请勿包含 subType 属性，其余属性会作为顶层属性与默认的上报字段组合成一条上报信息发送
+- tracker.setRequestUrl(requestUrl)  
+  该方法接受一个 string 类型的值作为参数，用于设置上报信息的后端接口地址
 
-后端可接收到的所有上报信息都会包含以下字段：
+## 后端可接收到的所有上报信息都会包含以下字段：
 
 - sdkVersion: this.config.sdkVersion, //sdk 版本
 - uuid: this.config.uuid || '', //用户 uuid，用于分析 UV
@@ -35,21 +42,21 @@ options 是一个对象，接受以下字段：
 - extra: this.config.extra || '', // 用户自定义上报的信息
 - url: location.href //上报信息源 url
 
-不同类型的上报信息会有不同的额外字段：
+## 不同类型的上报信息会有不同的额外字段：
 
-类型：behavior-historyPV
+### 类型：behavior-historyPV
 
 - subType: 'behavior-historyPV'
 - event:'pushState'/'replaceState'/'popstate'
 
-* 注：event 字段是用来标识触发了哪个事件引发的信息上报
+> 注：event 字段是用来标识触发了哪个事件引发的信息上报
 
-类型：behavior-hashPV
+### 类型：behavior-hashPV
 
 - subType: 'behavior-hashPV'
 - event: 'hashchange'
 
-类型：error-jsError
+### 类型：error-jsError
 
 - subType: 'error-jsError'
 - event:"error"
@@ -58,14 +65,14 @@ options 是一个对象，接受以下字段：
 - col: "14" 一个字符串类型的数字，标识错误所在的列号
 - stack: 一个数组，包含错误所处的堆栈信息
 
-类型：error-promiseReject
+### 类型：error-promiseReject
 
 - subType: 'error-promiseReject'
 - event: 'unhandledrejection'
 - reason: Promise 失败的 reason
 - message: 'No callback function was specified for the failed Promise'
 
-类型：performance-resourceLoad
+### 类型：performance-resourceLoad
 
 - subType: 'performance-resourceLoad'
 - event: "resource"
@@ -74,7 +81,7 @@ options 是一个对象，接受以下字段：
 - status: "Success"/"Failed" 资源加载成功与否
 - src_href: 资源请求的 src 或者 href
 
-类型：performance-XMLHttpRequest
+### 类型：performance-XMLHttpRequest
 
 - subType: 'performance-XMLHttpRequest'
 - event: "XMLHttpRequest"
@@ -85,7 +92,7 @@ options 是一个对象，接受以下字段：
 - method: 请求方法（小写）
 - status: 'Success'/'Failed' 请求成功与否
 
-类型：performance-fetch
+### 类型：performance-fetch
 
 - subType: 'performance-fetch'
 - event: "fetch"
@@ -96,19 +103,19 @@ options 是一个对象，接受以下字段：
 - method: 请求方法（小写）
 - status: 'Success'/'Failed' 请求成功与否
 
-类型：performance-LCP
+### 类型：performance-LCP
 
 - subType: 'performance-LCP'
 - event: "LCP"
 - LCP: 从页面加载开始到最大文本块或图像元素在屏幕上完成渲染的时间
 
-类型：performance-FCP
+### 类型：performance-FCP
 
 - subType: 'performance-FCP'
 - event: "FCP"
 - FCP: 从页面加载开始到页面内容的任何部分在屏幕上完成渲染的时间
 
-类型：performance-FP
+### 类型：performance-FP
 
 - subType: 'performance-FP'
 - event: "FP"

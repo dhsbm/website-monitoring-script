@@ -1,4 +1,4 @@
-lockfileVersion: 5.3
+lockfileVersion: 5.4
 
 specifiers:
   '@commitlint/cli': 12.1.4
@@ -19,10 +19,24 @@ devDependencies:
   install: registry.npmmirror.com/install/0.13.0
   npm: registry.npmmirror.com/npm/8.15.0
   webpack: registry.npmmirror.com/webpack/5.73.0_webpack-cli@4.10.0
-  webpack-cli: registry.npmmirror.com/webpack-cli/4.10.0_f445dff6f76f0ed3133a4ab59560a372
-  webpack-dev-server: registry.npmmirror.com/webpack-dev-server/4.9.3_ffd7cf999054608223b9fc836cf5004f
+  webpack-cli: registry.npmmirror.com/webpack-cli/4.10.0_6rc575xxn4hngez2jk2zkyfdoi
+  webpack-dev-server: registry.npmmirror.com/webpack-dev-server/4.9.3_77l47gmqkrqiei5z7sbwz5iaj4
 
 packages:
+
+  /fsevents/2.3.2:
+    resolution: {integrity: sha512-xiqMQR4xAeHTuB9uWm+fFRcIOgKBMiOBP+eXiyT7jsgVCq1bkVygt00oASowB7EdtpOHaaPgKt812P9ab+DDKA==}
+    engines: {node: ^8.16.0 || ^10.6.0 || >=11.0.0}
+    os: [darwin]
+    requiresBuild: true
+    dev: true
+    optional: true
+
+  /graceful-fs/4.2.10:
+    resolution: {integrity: sha512-9ByhssR2fPVsNZj478qUUbKfmL0+t5BDVyjShtyZZLiK7ZDAArFFfopyOTj0M05wE2tJPisA4iTnnXl2YoPvOA==}
+    requiresBuild: true
+    dev: true
+    optional: true
 
   registry.npmmirror.com/@babel/code-frame/7.18.6:
     resolution: {integrity: sha512-TDCmlK5eOvH+eH7cdAFlNXeVJqWIQ7gW9tY1GJIpUtFb6CmjVyq2VM3u71bOyR8CRihcCgMUYoDNyLXao3+70Q==, registry: http://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/@babel/code-frame/-/code-frame-7.18.6.tgz}
@@ -593,7 +607,7 @@ packages:
       '@xtuc/long': registry.npmmirror.com/@xtuc/long/4.2.2
     dev: true
 
-  registry.npmmirror.com/@webpack-cli/configtest/1.2.0_ffd7cf999054608223b9fc836cf5004f:
+  registry.npmmirror.com/@webpack-cli/configtest/1.2.0_77l47gmqkrqiei5z7sbwz5iaj4:
     resolution: {integrity: sha512-4FB8Tj6xyVkyqjj1OaTqCjXYULB9FMkqQ8yGrZjRDrYh0nOE+7Lhs45WioWQQMV+ceFlE368Ukhe6xdvJM9Egg==, registry: http://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/@webpack-cli/configtest/-/configtest-1.2.0.tgz}
     id: registry.npmmirror.com/@webpack-cli/configtest/1.2.0
     name: '@webpack-cli/configtest'
@@ -603,7 +617,7 @@ packages:
       webpack-cli: 4.x.x
     dependencies:
       webpack: registry.npmmirror.com/webpack/5.73.0_webpack-cli@4.10.0
-      webpack-cli: registry.npmmirror.com/webpack-cli/4.10.0_f445dff6f76f0ed3133a4ab59560a372
+      webpack-cli: registry.npmmirror.com/webpack-cli/4.10.0_6rc575xxn4hngez2jk2zkyfdoi
     dev: true
 
   registry.npmmirror.com/@webpack-cli/info/1.5.0_webpack-cli@4.10.0:
@@ -615,10 +629,10 @@ packages:
       webpack-cli: 4.x.x
     dependencies:
       envinfo: registry.npmmirror.com/envinfo/7.8.1
-      webpack-cli: registry.npmmirror.com/webpack-cli/4.10.0_f445dff6f76f0ed3133a4ab59560a372
+      webpack-cli: registry.npmmirror.com/webpack-cli/4.10.0_6rc575xxn4hngez2jk2zkyfdoi
     dev: true
 
-  registry.npmmirror.com/@webpack-cli/serve/1.7.0_4c58ec6b3c7bd9e91c91ce21a56852c0:
+  registry.npmmirror.com/@webpack-cli/serve/1.7.0_jrmoy2z4ppm6sherzyq2k2csya:
     resolution: {integrity: sha512-oxnCNGj88fL+xzV+dacXs44HcDwf1ovs3AuEzvP7mqXw7fQntqIhQ1BRmynh4qEKQSSSRSWVyXRjmTbZIX9V2Q==, registry: http://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/@webpack-cli/serve/-/serve-1.7.0.tgz}
     id: registry.npmmirror.com/@webpack-cli/serve/1.7.0
     name: '@webpack-cli/serve'
@@ -630,8 +644,8 @@ packages:
       webpack-dev-server:
         optional: true
     dependencies:
-      webpack-cli: registry.npmmirror.com/webpack-cli/4.10.0_f445dff6f76f0ed3133a4ab59560a372
-      webpack-dev-server: registry.npmmirror.com/webpack-dev-server/4.9.3_ffd7cf999054608223b9fc836cf5004f
+      webpack-cli: registry.npmmirror.com/webpack-cli/4.10.0_6rc575xxn4hngez2jk2zkyfdoi
+      webpack-dev-server: registry.npmmirror.com/webpack-dev-server/4.9.3_77l47gmqkrqiei5z7sbwz5iaj4
     dev: true
 
   registry.npmmirror.com/@xtuc/ieee754/1.2.0:
@@ -874,6 +888,8 @@ packages:
       raw-body: registry.npmmirror.com/raw-body/2.5.1
       type-is: registry.npmmirror.com/type-is/1.6.18
       unpipe: registry.npmmirror.com/unpipe/1.0.0
+    transitivePeerDependencies:
+      - supports-color
     dev: true
 
   registry.npmmirror.com/bonjour-service/1.0.13:
@@ -1019,7 +1035,7 @@ packages:
       normalize-path: registry.npmmirror.com/normalize-path/3.0.0
       readdirp: registry.npmmirror.com/readdirp/3.6.0
     optionalDependencies:
-      fsevents: registry.npmmirror.com/fsevents/2.3.2
+      fsevents: 2.3.2
     dev: true
 
   registry.npmmirror.com/chrome-trace-event/1.0.3:
@@ -1144,6 +1160,8 @@ packages:
       on-headers: registry.npmmirror.com/on-headers/1.0.2
       safe-buffer: registry.npmmirror.com/safe-buffer/5.1.2
       vary: registry.npmmirror.com/vary/1.1.2
+    transitivePeerDependencies:
+      - supports-color
     dev: true
 
   registry.npmmirror.com/concat-map/0.0.1:
@@ -1279,6 +1297,11 @@ packages:
     resolution: {integrity: sha512-bC7ElrdJaJnPbAP+1EotYvqZsb3ecl5wi6Bfi6BJTUcNowp6cvspg0jXznRTKDjm/E7AdgFBVeAPVMNcKGsHMA==, registry: http://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/debug/-/debug-2.6.9.tgz}
     name: debug
     version: 2.6.9
+    peerDependencies:
+      supports-color: '*'
+    peerDependenciesMeta:
+      supports-color:
+        optional: true
     dependencies:
       ms: registry.npmmirror.com/ms/2.0.0
     dev: true
@@ -1571,6 +1594,8 @@ packages:
       type-is: registry.npmmirror.com/type-is/1.6.18
       utils-merge: registry.npmmirror.com/utils-merge/1.0.1
       vary: registry.npmmirror.com/vary/1.1.2
+    transitivePeerDependencies:
+      - supports-color
     dev: true
 
   registry.npmmirror.com/external-editor/3.1.0:
@@ -1643,6 +1668,8 @@ packages:
       parseurl: registry.npmmirror.com/parseurl/1.3.3
       statuses: registry.npmmirror.com/statuses/2.0.1
       unpipe: registry.npmmirror.com/unpipe/1.0.0
+    transitivePeerDependencies:
+      - supports-color
     dev: true
 
   registry.npmmirror.com/find-config/1.0.0:
@@ -1723,16 +1750,6 @@ packages:
     name: fs.realpath
     version: 1.0.0
     dev: true
-
-  registry.npmmirror.com/fsevents/2.3.2:
-    resolution: {integrity: sha512-xiqMQR4xAeHTuB9uWm+fFRcIOgKBMiOBP+eXiyT7jsgVCq1bkVygt00oASowB7EdtpOHaaPgKt812P9ab+DDKA==, registry: http://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/fsevents/-/fsevents-2.3.2.tgz}
-    name: fsevents
-    version: 2.3.2
-    engines: {node: ^8.16.0 || ^10.6.0 || >=11.0.0}
-    os: [darwin]
-    requiresBuild: true
-    dev: true
-    optional: true
 
   registry.npmmirror.com/function-bind/1.1.1:
     resolution: {integrity: sha512-yIovAzMX49sF8Yl58fSCWJ5svSLuaibPxXQJFLmBObTuCr0Mf1KiPopGM9NiFjiYBCbfaa2Fh6breQ6ANVTI0A==, registry: http://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/function-bind/-/function-bind-1.1.1.tgz}
@@ -2280,7 +2297,7 @@ packages:
     dependencies:
       universalify: registry.npmmirror.com/universalify/2.0.0
     optionalDependencies:
-      graceful-fs: registry.npmmirror.com/graceful-fs/4.2.10
+      graceful-fs: 4.2.10
     dev: true
 
   registry.npmmirror.com/jsonparse/1.3.1:
@@ -3272,6 +3289,8 @@ packages:
       on-finished: registry.npmmirror.com/on-finished/2.4.1
       range-parser: registry.npmmirror.com/range-parser/1.2.1
       statuses: registry.npmmirror.com/statuses/2.0.1
+    transitivePeerDependencies:
+      - supports-color
     dev: true
 
   registry.npmmirror.com/serialize-javascript/6.0.0:
@@ -3295,6 +3314,8 @@ packages:
       http-errors: registry.npmmirror.com/http-errors/1.6.3
       mime-types: registry.npmmirror.com/mime-types/2.1.35
       parseurl: registry.npmmirror.com/parseurl/1.3.3
+    transitivePeerDependencies:
+      - supports-color
     dev: true
 
   registry.npmmirror.com/serve-static/1.15.0:
@@ -3307,6 +3328,8 @@ packages:
       escape-html: registry.npmmirror.com/escape-html/1.0.3
       parseurl: registry.npmmirror.com/parseurl/1.3.3
       send: registry.npmmirror.com/send/0.18.0
+    transitivePeerDependencies:
+      - supports-color
     dev: true
 
   registry.npmmirror.com/setprototypeof/1.1.0:
@@ -3836,7 +3859,7 @@ packages:
       minimalistic-assert: registry.npmmirror.com/minimalistic-assert/1.0.1
     dev: true
 
-  registry.npmmirror.com/webpack-cli/4.10.0_f445dff6f76f0ed3133a4ab59560a372:
+  registry.npmmirror.com/webpack-cli/4.10.0_6rc575xxn4hngez2jk2zkyfdoi:
     resolution: {integrity: sha512-NLhDfH/h4O6UOy+0LSso42xvYypClINuMNBVVzX4vX98TmTaTUxwRbXdhucbFMd2qLaCTcLq/PdYrvi8onw90w==, registry: http://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/webpack-cli/-/webpack-cli-4.10.0.tgz}
     id: registry.npmmirror.com/webpack-cli/4.10.0
     name: webpack-cli
@@ -3860,9 +3883,9 @@ packages:
         optional: true
     dependencies:
       '@discoveryjs/json-ext': registry.npmmirror.com/@discoveryjs/json-ext/0.5.7
-      '@webpack-cli/configtest': registry.npmmirror.com/@webpack-cli/configtest/1.2.0_ffd7cf999054608223b9fc836cf5004f
+      '@webpack-cli/configtest': registry.npmmirror.com/@webpack-cli/configtest/1.2.0_77l47gmqkrqiei5z7sbwz5iaj4
       '@webpack-cli/info': registry.npmmirror.com/@webpack-cli/info/1.5.0_webpack-cli@4.10.0
-      '@webpack-cli/serve': registry.npmmirror.com/@webpack-cli/serve/1.7.0_4c58ec6b3c7bd9e91c91ce21a56852c0
+      '@webpack-cli/serve': registry.npmmirror.com/@webpack-cli/serve/1.7.0_jrmoy2z4ppm6sherzyq2k2csya
       colorette: registry.npmmirror.com/colorette/2.0.19
       commander: registry.npmmirror.com/commander/7.2.0
       cross-spawn: registry.npmmirror.com/cross-spawn/7.0.3
@@ -3871,7 +3894,7 @@ packages:
       interpret: registry.npmmirror.com/interpret/2.2.0
       rechoir: registry.npmmirror.com/rechoir/0.7.1
       webpack: registry.npmmirror.com/webpack/5.73.0_webpack-cli@4.10.0
-      webpack-dev-server: registry.npmmirror.com/webpack-dev-server/4.9.3_ffd7cf999054608223b9fc836cf5004f
+      webpack-dev-server: registry.npmmirror.com/webpack-dev-server/4.9.3_77l47gmqkrqiei5z7sbwz5iaj4
       webpack-merge: registry.npmmirror.com/webpack-merge/5.8.0
     dev: true
 
@@ -3892,7 +3915,7 @@ packages:
       webpack: registry.npmmirror.com/webpack/5.73.0_webpack-cli@4.10.0
     dev: true
 
-  registry.npmmirror.com/webpack-dev-server/4.9.3_ffd7cf999054608223b9fc836cf5004f:
+  registry.npmmirror.com/webpack-dev-server/4.9.3_77l47gmqkrqiei5z7sbwz5iaj4:
     resolution: {integrity: sha512-3qp/eoboZG5/6QgiZ3llN8TUzkSpYg1Ko9khWX1h40MIEUNS2mDoIa8aXsPfskER+GbTvs/IJZ1QTBBhhuetSw==, registry: http://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/webpack-dev-server/-/webpack-dev-server-4.9.3.tgz}
     id: registry.npmmirror.com/webpack-dev-server/4.9.3
     name: webpack-dev-server
@@ -3934,7 +3957,7 @@ packages:
       sockjs: registry.npmmirror.com/sockjs/0.3.24
       spdy: registry.npmmirror.com/spdy/4.0.2
       webpack: registry.npmmirror.com/webpack/5.73.0_webpack-cli@4.10.0
-      webpack-cli: registry.npmmirror.com/webpack-cli/4.10.0_f445dff6f76f0ed3133a4ab59560a372
+      webpack-cli: registry.npmmirror.com/webpack-cli/4.10.0_6rc575xxn4hngez2jk2zkyfdoi
       webpack-dev-middleware: registry.npmmirror.com/webpack-dev-middleware/5.3.3_webpack@5.73.0
       ws: registry.npmmirror.com/ws/8.8.1
     transitivePeerDependencies:
@@ -3997,7 +4020,7 @@ packages:
       tapable: registry.npmmirror.com/tapable/2.2.1
       terser-webpack-plugin: registry.npmmirror.com/terser-webpack-plugin/5.3.3_webpack@5.73.0
       watchpack: registry.npmmirror.com/watchpack/2.4.0
-      webpack-cli: registry.npmmirror.com/webpack-cli/4.10.0_f445dff6f76f0ed3133a4ab59560a372
+      webpack-cli: registry.npmmirror.com/webpack-cli/4.10.0_6rc575xxn4hngez2jk2zkyfdoi
       webpack-sources: registry.npmmirror.com/webpack-sources/3.2.3
     transitivePeerDependencies:
       - '@swc/core'

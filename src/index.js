@@ -24,6 +24,18 @@ export default class Tracker {
     this.#installTracker()
   }
 
+  static complete(requestUrl) {
+    return new Tracker({
+      requestUrl,
+      historyTracker: true,
+      hashTracker: true,
+      jsErrorTracker: true,
+      resourceLoadTracker: true,
+      requestTracker: true,
+      performanceTracker: true
+    })
+  }
+
   // 这个私有方法返回默认配置
   #initdef() {
     return {
@@ -369,5 +381,10 @@ export default class Tracker {
   // 暴露给用户的方法，用户可以通过这个方法上报一些信息
   sendTracker(data) {
     this.#reportTracker({ subType: 'self-report', ...data })
+  }
+
+  // 暴露给用户的方法，用户可以通过这个方法设置上报信息的接口
+  setRequestUrl(requestUrl) {
+    this.config.requestUrl = requestUrl
   }
 }
