@@ -18,6 +18,12 @@ export default class Tracker {
   // requestUrl默认为我们自己的后端请求地址，用户可能并不想把数据发给我们使用我们的监控系统，他可能只是借用我们的sdk搜集数据
   // 然后把数据存储到用户自己的数据库，所以在初始化Tracker实例的时候，允许用户传自己的url来覆盖我们的url
   constructor(options) {
+    // 因为重写了XMLHttpRequest和fetch两个API，所以在重写前先保存一份挂在实例身上
+    this.originalFetch = window.fetch
+    this.originalXMLHttpRequest = window.XMLHttpRequest
+    this.originalOpen = XMLHttpRequest.prototype.open
+    this.originalSend = XMLHttpRequest.prototype.send
+
     if (!options.requestUrl)
       options.requestUrl = 'http://localhost:3000/report/error'
     this.config = Object.assign(this.#initdef(), options)
@@ -55,8 +61,8 @@ export default class Tracker {
       if (['pushState', 'replaceState', 'popstate'].includes(event)) {
         window.addEventListener(event, evt => {
           this.#reportTracker({
-            subType: 'behavior-historyPV', //信息的分类
-            event //标识是触发了哪个事件引起的信息上报，便于后期维护
+            subType: 'behavior-historyPV',
+            event
           })
         })
       }
@@ -145,18 +151,43 @@ export default class Tracker {
 
           // 上报
           if (resourceEntries.length) {
-            resourceEntries.forEach(entry => {
+            resourceEntries.forEach(async entry => {
               let status = resourceErrorList.includes(entry.name)
                 ? 'Failed'
                 : 'Success'
-              self.#reportTracker({
-                resourceType: entry.initiatorType, //资源的类型
-                duration: entry.duration, //资源加载的耗时
-                status, //资源加载成功与否
-                src_href: entry.name, //资源请求的src或者href
-                subType: 'performance-resourceLoad', //信息的分类
-                event //标识是触发了哪个事件引起的信息上报，便于后期维护
-              })
+
+              // 对请求的css资源作特殊处理
+              if (entry.initiatorType === 'css') {
+                setTimeout(() => {
+                  let xml = new self.originalXMLHttpRequest()
+                  self.originalOpen.apply(xml, ['GET', entry.name])
+                  xml.onload = res => {
+                    if (
+                      !(res.target.status >= 200 && res.target.status <= 299)
+                    ) {
+                      status = 'Failed'
+                    }
+                    self.#reportTracker({
+                      resourceType: entry.initiatorType,
+                      duration: entry.duration,
+                      status,
+                      src_href: entry.name,
+                      subType: 'performance-resourceLoad',
+                      event
+                    })
+                  }
+                  self.originalSend.call(xml)
+                })
+              } else {
+                self.#reportTracker({
+                  resourceType: entry.initiatorType, //资源的类型
+                  duration: entry.duration, //资源加载的耗时
+                  status, //资源加载成功与否
+                  src_href: entry.name, //资源请求的src或者href
+                  subType: 'performance-resourceLoad', //信息的分类
+                  event //标识是触发了哪个事件引起的信息上报，便于后期维护
+                })
+              }
             })
           }
 
@@ -353,19 +384,22 @@ export default class Tracker {
 
   // 上报信息
   #reportTracker(data) {
-    const params = Object.assign(
-      // 默认会有的字段
-      {
-        sdkVersion: this.config.sdkVersion, //sdk版本
-        uuid: this.config.uuid || '', //用户uuid，用于分析UV
-        reportTime: Date.now(), //信息上报的时间
-        extra: this.config.extra || '', // 用户自定义上报的信息
-        url: location.href //上报信息源url
-      },
-      data
+    navigator.sendBeacon(
+      this.config.requestUrl,
+      new URLSearchParams(
+        Object.assign(
+          // 每条上报信息都会有的字段
+          {
+            sdkVersion: this.config.sdkVersion, //sdk版本
+            uuid: this.config.uuid || '', //用户uuid，用于分析UV
+            reportTime: Date.now(), //信息上报的时间
+            extra: this.config.extra || '', // 用户自定义上报的信息
+            url: location.href //上报信息源url
+          },
+          data
+        )
+      )
     )
-
-    navigator.sendBeacon(this.config.requestUrl, new URLSearchParams(params))
   }
 
   // 暴露给用户的方法，用户可以通过这个方法设置用户的uuid，在上报的时候，如果不为空就上报
