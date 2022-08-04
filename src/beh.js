@@ -39,6 +39,7 @@ const areaList = {
 }
 
 export default function () {
+  const user = getUser()
   const browser = getBrowser()
   let ip = '0.0.0.0',
     area = 0
@@ -54,6 +55,7 @@ export default function () {
       browser,
       ip,
       area,
+      user,
     }
     console.log(reportData)
     report(reportData)
@@ -68,6 +70,7 @@ export default function () {
       browser,
       ip,
       area,
+      user,
     }
     report(reportData)
   })
@@ -84,6 +87,7 @@ export default function () {
     }
   }
 }
+
 function getBrowser() {
   // 获取浏览器 userAgent
   var ua = navigator.userAgent
@@ -131,4 +135,21 @@ function getBrowser() {
   }
 
   return 0 // 其他
+}
+
+function getUser() {
+  const key = '__user__'
+  let time = localStorage.getItem(key)
+  if (!time) {
+    localStorage.setItem(key, Date.now().toString())
+    return 0
+  } else {
+    const d1 = new Date(parseInt(time))
+    const d2 = new Date()
+    if (d1.getDay() != d2.getDate()) {
+      return 1
+    } else {
+      return 2
+    }
+  }
 }
