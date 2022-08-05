@@ -45,8 +45,8 @@ export default function () {
     area = 0
   getIp()
   let startTime = Date.now()
-  window.addEventListener('hashchange', (e) => {
-    console.log(e)
+  window.addEventListener('hashchange', function (e) {
+    // console.log(e)
     const endTime = Date.now()
     const reportData = {
       kind: 2,
@@ -57,11 +57,11 @@ export default function () {
       area,
       user,
     }
-    console.log(reportData)
+    // console.log(reportData)
     report(reportData)
     startTime = endTime
   })
-  window.addEventListener('beforeunload', () => {
+  window.addEventListener('beforeunload', function () {
     const endTime = Date.now()
     const reportData = {
       kind: 2,

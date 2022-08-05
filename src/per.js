@@ -2,13 +2,13 @@ import { report } from './util'
 
 export default function () {
   let lcp
-  new PerformanceObserver((entryList, observer) => {
+  new PerformanceObserver(function (entryList, observer) {
     let perfEntries = entryList.getEntries()
     lcp = perfEntries[0]
     observer.disconnect()
   }).observe({ entryTypes: ['largest-contentful-paint'] })
 
-  setTimeout(() => {
+  setTimeout(function () {
     const { fetchStart, domContentLoadedEventEnd, loadEventEnd, domainLookupStart, domainLookupEnd } =
       window.performance.timing
     const dns = domainLookupEnd - domainLookupStart
@@ -22,12 +22,12 @@ export default function () {
       dns,
       fp: fp.startTime,
       fcp: fcp.startTime,
-      lcp: lcp?.startTime || fcp.startTime,
+      lcp: lcp ? lcp.startTime : fcp.startTime,
       dcl,
       l,
     }
     report(reportData)
-    console.log(reportData)
+    // console.log(reportData)
   }, 3000)
 }
 // 暂未采集的指标

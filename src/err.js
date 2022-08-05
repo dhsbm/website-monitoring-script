@@ -4,7 +4,7 @@ import { originXML } from './http'
 export default function () {
   window.addEventListener(
     'error',
-    (e) => {
+    function (e) {
       // console.log(e)
       let reportData
       // 资源加载异常
@@ -30,14 +30,14 @@ export default function () {
       }
       report(reportData)
       // console.log(reportData)
-      // e.preventDefault()
+      e.preventDefault()
     },
     true
   )
   // promise异常
   window.addEventListener(
     'unhandledrejection',
-    (e) => {
+    function (e) {
       const reportData = {
         kind: 0,
         type: 0,
@@ -47,12 +47,12 @@ export default function () {
       }
       // console.log(reportData)
       report(reportData)
-      // e.preventDefault()
+      e.preventDefault()
     },
     true
   )
 
-  setTimeout(() => {
+  setTimeout(function () {
     // 白屏异常
     const width = window.innerWidth
     const height = window.innerHeight
@@ -83,7 +83,9 @@ export default function () {
     // 资源加载异常 格外处理css中的异常
     // 通过再发一次请求验证
     const entries = performance.getEntriesByType('resource')
-    const srcEntries = entries.filter((val) => val.initiatorType == 'css')
+    const srcEntries = entries.filter(function (val) {
+      return val.initiatorType == 'css'
+    })
     for (const item of srcEntries) {
       const xhr = new XMLHttpRequest()
       originXML.open.call(xhr, 'GET', item.name)
@@ -117,7 +119,9 @@ function formatErrorStack(stack) {
   const arr = stack.split('\n')
   return arr
     .slice(1)
-    .map((str) => str.trim())
+    .map(function (str) {
+      return str.trim()
+    })
     .join(' ^ ')
 }
 

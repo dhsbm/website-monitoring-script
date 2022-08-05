@@ -28,7 +28,7 @@ function rewriteXML() {
     // 立刻读取url和way，省的请求回来前发了下一个请求，被覆盖
     const url = cacheUrl
     const way = cacheWay
-    const onLoadend = () => {
+    const onLoadend = function () {
       // 采集请求数据
       const endTime = Date.now()
       const success = isSuccess(this.status)
@@ -43,6 +43,7 @@ function rewriteXML() {
         res_body: this.response ? JSON.stringify(this.response) : this.statusText,
       }
       report(reportData)
+      // console.log(reportData)
       this.removeEventListener('loadend', onLoadend, true)
 
       // 上报接口异常
@@ -54,7 +55,7 @@ function rewriteXML() {
           message: `${this.status} ${this.statusText}`,
           stack: `Failed when requesting ${url}`,
         }
-        console.log(reportData)
+        // console.log(reportData)
         report(reportData)
       }
     }
@@ -70,22 +71,22 @@ function rewriteFeact() {
   const originalFetch = window.fetch
   window.fetch = function newFetch(url, config) {
     const startTime = Date.now()
-    return originalFetch(url, config).then((res) => {
+    return originalFetch(url, config).then(function (res) {
       // 请求采集请求数据
       const endTime = Date.now()
-      res.text().then((data) => {
+      res.text().then(function (data) {
         const success = isSuccess(res.status)
         const reportData = {
           kind: 3,
           time: startTime,
           send_url: res.url,
-          way: (config?.method || 'GET').toUpperCase(),
+          way: (config ? config.method : 'GET').toUpperCase(),
           success: success,
           status: res.status,
           res_time: endTime - startTime,
           res_body: data,
         }
-        console.log(reportData)
+        // console.log(reportData)
         report(reportData)
 
         // 采集接口异常
@@ -97,7 +98,7 @@ function rewriteFeact() {
             message: `${res.status} ${res.statusText}`,
             stack: `Failed when requesting ${res.url}`,
           }
-          console.log(reportData)
+          // console.log(reportData)
           report(reportData)
         }
       })

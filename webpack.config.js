@@ -31,4 +31,19 @@ module.exports = {
       return _
     },
   },
+  module: {
+    rules: [
+      {
+        test: /(\.jsx|\.js)$/,
+        use: {
+          loader: 'babel-loader',
+          options: {
+            presets: ['env'],
+          },
+        },
+        exclude: path.resolve(__dirname, 'node_modules'),
+        include: path.resolve(__dirname, './dist'), //输出路径
+      },
+    ],
+  },
 }

@@ -196,7 +196,7 @@ export default class Tracker {
               const reportData = {
                 startTime,
                 req_href: url,
-                method: (config?.method || 'GET').toUpperCase(),
+                method: (config ? config.method : 'GET').toUpperCase(),
                 subType: 'performance-fetch', //信息的分类
                 event, //标识是触发了哪个事件引起的信息上报，便于后期维护
               }
