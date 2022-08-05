@@ -30,6 +30,7 @@ export default function () {
     console.log(reportData)
   }, 3000)
 }
+// 暂未采集的指标
 // let fmp // 最有意义的元素渲染
 // new PerformanceObserver((entryList, observer) => {
 //   let perfEntries = entryList.getEntries()
