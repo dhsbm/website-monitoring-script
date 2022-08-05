@@ -5,10 +5,15 @@ export default function () {
   rewriteXML()
   window.fetch && rewriteFeact()
 }
+
+export const originXML = {}
+
 // 重写XMLHttpRequest
 function rewriteXML() {
   const originalOpen = XMLHttpRequest.prototype.open
   const originalSend = XMLHttpRequest.prototype.send
+  originXML.open = originalOpen
+  originXML.send = originalSend
   const originalProto = XMLHttpRequest.prototype
   let cacheWay, cacheUrl
   // 重写open方法
@@ -37,10 +42,7 @@ function rewriteXML() {
         res_time: endTime - startTime,
         res_body: this.response ? JSON.stringify(this.response) : this.statusText,
       }
-      if (url.indexOf('database') == -1) {
-        console.log(reportData)
-        report(reportData)
-      }
+      report(reportData)
       this.removeEventListener('loadend', onLoadend, true)
 
       // 上报接口异常
