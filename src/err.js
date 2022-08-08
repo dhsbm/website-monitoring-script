@@ -66,7 +66,7 @@ export default function () {
     if (emptyPoints == 18) {
       const reportData = {
         kind: 0,
-        type: 0,
+        type: 3,
         time: Date.now(),
         message: 'White screen',
         stack: 'No DOM rendering for three seconds',

@@ -30,7 +30,7 @@ function rewriteXML() {
     const way = cacheWay
     const onLoadend = function () {
       // 采集请求数据
-      console.log(this)
+      // console.log(this)
       const endTime = Date.now()
       const success = isSuccess(this.status)
       const reportData = {
