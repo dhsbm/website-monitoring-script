@@ -1,4 +1,5 @@
 import { originXML } from './http'
+const _XMLHttpRequest = window.XMLHttpRequest
 
 let web_id = 1018
 let closeDebug = false
@@ -30,7 +31,7 @@ export function report(data) {
       url += 'http'
       break
   }
-  const xhr = new XMLHttpRequest()
+  const xhr = new _XMLHttpRequest()
   originXML.open.call(xhr, 'POST', url, true)
   originXML.send.call(xhr, JSON.stringify(data))
   // xhr.open('POST', url, true)
