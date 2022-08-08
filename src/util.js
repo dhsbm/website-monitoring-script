@@ -7,8 +7,9 @@ window.setOption = function (option = {}) {
   closeDebug = option.closeDebug
 }
 
-export const decode = (url) => decodeURIComponent(url)
-
+export const decode = function (url) {
+  return decodeURIComponent(url)
+}
 export function report(data) {
   data.web_id = web_id
   data.url = decode(location.hostname) + decode(location.pathname)
