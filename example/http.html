@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script src="/bundle.js"></script>
+  </head>
+  <body>
+    <button id="success">发送成功请求</button>
+    <button id="fail">发送失败请求</button>
+    <button id="fetch1">发送fetch成功请求</button>
+    <button id="fetch2">发送fetch失败请求</button>
+    <script>
+      const success = document.querySelector('#success')
+
+      success.addEventListener('click', () => {
+        const xhr = new XMLHttpRequest()
+        xhr.open('GET', '/success?a=1', true)
+        // xhr.responseType = 'json'
+        xhr.onload = function () {
+          console.log(xhr.response)
+        }
+        xhr.send()
+      })
+      const fail = document.querySelector('#fail')
+      function fun() {
+        fun2()
+      }
+      function fun2() {
+        const xhr = new XMLHttpRequest()
+        xhr.open('POST', 'fail', true)
+        xhr.responseType = 'json'
+        xhr.onload = function () {
+          console.log(xhr.response)
+        }
+        xhr.onerror = function (error) {
+          console.log(error)
+        }
+        xhr.send('name=aaa')
+      }
+      fail.addEventListener('click', () => {
+        console.log(1)
+        fun()
+      })
+
+      const fetch1 = document.querySelector('#fetch1')
+      fetch1.addEventListener('click', async () => {
+        let res = await fetch('/fetch1')
+        res.json().then(
+          (res) => {
+            console.log(res)
+          },
+          (err) => {
+            console.log(err)
+          }
+        )
+      })
+      const fetch2 = document.querySelector('#fetch2')
+      fetch2.addEventListener('click', async () => {
+        let res = await fetch('/fetch2', {
+          method: 'POST',
+        })
+      })
+    </script>
+
+    <script></script>
+  </body>
+</html>

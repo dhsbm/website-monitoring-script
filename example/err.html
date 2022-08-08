@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script src="/bundle.js"></script>
+    <style>
+      /* 没找到检测的方法 */
+      div {
+        background: url('./css.png');
+      }
+    </style>
+  </head>
+  <body>
+    <button id="err">产生异常</button>
+    <button id="err2">产生promise异常</button>
+    <img src="a.png" alt="" />
+    <script>
+      const err = document.querySelector('#err')
+      function fun() {
+        fun2()
+      }
+      function fun2() {
+        const a = 1
+        a++
+      }
+      err.addEventListener('click', () => {
+        fun()
+      })
+      const err2 = document.querySelector('#err2')
+      err2.addEventListener('click', () => {
+        new Promise((resolve, reject) => {
+          window.a.a
+        })
+      })
+    </script>
+    <script src="/111.js"></script>
+  </body>
+</html>
