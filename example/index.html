@@ -6,35 +6,25 @@
     <title>Document</title>
     <script src="/bundle.js"></script>
     <style>
-      /* 没找到检测的方法 */
-      div {
-        background: url('./css.png');
+      body {
+        background-color: #eee;
+      }
+      .red {
+        width: 200px;
+        height: 200px;
+        background-color: red;
       }
     </style>
   </head>
   <body>
-    <button id="err">产生异常</button>
-    <button id="err2">产生promise异常</button>
-    <img src="a.png" alt="" />
-    <script>
-      const err = document.querySelector('#err')
-      function fun() {
-        fun2()
-      }
-      function fun2() {
-        const a = 1
-        a++
-      }
-      err.addEventListener('click', () => {
-        fun()
-      })
-      const err2 = document.querySelector('#err2')
-      err2.addEventListener('click', () => {
-        new Promise((resolve, reject) => {
-          window.a.a
-        })
-      })
-    </script>
-    <script src="/111.js"></script>
+    <div class="red"></div>
+
+    <div><span>12345</span></div>
+    <div><span>12345</span></div>
+    <h1 elementtiming="meaningful">最有意义的元素</h1>
+    <input type="text" />
+    <div><span>12345</span></div>
+    <div><span>12345</span></div>
+    <div class="red">12345</div>
   </body>
 </html>

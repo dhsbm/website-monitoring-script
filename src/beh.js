@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { report } from './util'
 
 const areaList = {
@@ -45,6 +46,7 @@ export default function () {
     area = 0
   getIp()
   let startTime = Date.now()
+  // @ts-ignore
   window.addEventListener('hashchange', function (e) {
     // console.log(e)
     const endTime = Date.now()
@@ -81,8 +83,12 @@ export default function () {
     script.src = 'http://pv.sohu.com/cityjson'
     document.head.appendChild(script)
     script.onload = function () {
-      ip = returnCitySN.cip
-      area = areaList[returnCitySN.cname.slice(0, 2)] || 0
+      if (returnCitySN && returnCitySN.cip) {
+        ip = returnCitySN.cip
+      }
+      if (returnCitySN && returnCitySN.cname) {
+        area = areaList[returnCitySN.cname.slice(0, 2)] || 0
+      }
       // console.log(returnCitySN)
     }
   }

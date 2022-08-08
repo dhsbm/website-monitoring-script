@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { report } from './util'
 import { originXML } from './http'
 
@@ -30,7 +31,7 @@ export default function () {
       }
       report(reportData)
       // console.log(reportData)
-      e.preventDefault()
+      // e.preventDefault()
     },
     true
   )
@@ -45,9 +46,9 @@ export default function () {
         message: getErrorType(e.reason.stack) + e.reason.message,
         stack: formatErrorStack(e.reason.stack),
       }
-      // console.log(reportData)
       report(reportData)
-      e.preventDefault()
+      // console.log(reportData)
+      // e.preventDefault()
     },
     true
   )
@@ -108,7 +109,7 @@ export default function () {
       }
       xhr.addEventListener('loadend', onLoadend)
     }
-  }, 1000)
+  }, 3000)
 }
 
 function getErrorType(stack) {

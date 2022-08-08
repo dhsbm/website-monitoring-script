@@ -30,6 +30,7 @@ function rewriteXML() {
     const way = cacheWay
     const onLoadend = function () {
       // 采集请求数据
+      console.log(this)
       const endTime = Date.now()
       const success = isSuccess(this.status)
       const reportData = {
@@ -37,10 +38,10 @@ function rewriteXML() {
         time: startTime,
         send_url: url,
         way,
-        success,
+        success: success ? 0 : 1,
         status: this.status,
         res_time: endTime - startTime,
-        res_body: this.response ? JSON.stringify(this.response) : this.statusText,
+        res_body: this.response ? this.response : this.statusText,
       }
       report(reportData)
       // console.log(reportData)
@@ -66,7 +67,7 @@ function rewriteXML() {
   }
 }
 
-// 重写feach
+// 重写fetch
 function rewriteFeact() {
   const originalFetch = window.fetch
   window.fetch = function newFetch(url, config) {
@@ -74,34 +75,32 @@ function rewriteFeact() {
     return originalFetch(url, config).then(function (res) {
       // 请求采集请求数据
       const endTime = Date.now()
-      res.text().then(function (data) {
-        const success = isSuccess(res.status)
+      const success = isSuccess(res.status)
+      const reportData = {
+        kind: 3,
+        time: startTime,
+        send_url: res.url,
+        way: (config ? config.method : 'GET').toUpperCase(),
+        success: success ? 0 : 1,
+        status: res.status,
+        res_time: endTime - startTime,
+        res_body: 'fetch请求无法读取返回信息',
+      }
+      // console.log(reportData)
+      report(reportData)
+
+      // 采集接口异常
+      if (!success) {
         const reportData = {
-          kind: 3,
-          time: startTime,
-          send_url: res.url,
-          way: (config ? config.method : 'GET').toUpperCase(),
-          success: success,
-          status: res.status,
-          res_time: endTime - startTime,
-          res_body: data,
+          kind: 0,
+          type: 2,
+          time: endTime,
+          message: `${res.status} ${res.statusText}`,
+          stack: `Failed when requesting ${res.url}`,
         }
         // console.log(reportData)
         report(reportData)
-
-        // 采集接口异常
-        if (!success) {
-          const reportData = {
-            kind: 0,
-            type: 2,
-            time: endTime,
-            message: `${res.status} ${res.statusText}`,
-            stack: `Failed when requesting ${res.url}`,
-          }
-          // console.log(reportData)
-          report(reportData)
-        }
-      })
+      }
       return res
     })
   }
