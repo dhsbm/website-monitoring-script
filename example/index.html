@@ -6,6 +6,10 @@
     <title>Document</title>
     <script src="/bundle.js"></script>
     <style>
+      /* 没找到检测的方法 */
+      div {
+        background: url('./css.png');
+      }
       body {
         background-color: #eee;
       }
@@ -17,14 +21,99 @@
     </style>
   </head>
   <body>
-    <div class="red"></div>
+    <button id="err">产生异常</button>
+    <button id="err2">产生promise异常</button>
+    <button id="success">发送成功请求</button>
+    <button id="fail">发送失败请求</button>
+    <button id="fetch1">发送fetch成功请求</button>
+    <button id="fetch2">发送fetch失败请求</button>
+    <button id="btn">清空全屏元素（产生白屏异常,需在3秒内点击）</button>
+    <div id="div">
+      <div class="red"></div>
 
-    <div><span>12345</span></div>
-    <div><span>12345</span></div>
-    <h1 elementtiming="meaningful">最有意义的元素</h1>
-    <input type="text" />
-    <div><span>12345</span></div>
-    <div><span>12345</span></div>
-    <div class="red">12345</div>
+      <div><span>12345</span></div>
+      <div><span>12345</span></div>
+      <h1 elementtiming="meaningful">最有意义的元素</h1>
+      <input type="text" />
+      <div><span>12345</span></div>
+      <div><span>12345</span></div>
+      <div class="red">12345</div>
+    </div>
+    <img src="a.png" alt="" />
+    <script>
+      const err = document.querySelector('#err')
+      function fun() {
+        fun2()
+      }
+      function fun2() {
+        const a = 1
+        a++
+      }
+      err.addEventListener('click', () => {
+        fun()
+      })
+      const err2 = document.querySelector('#err2')
+      err2.addEventListener('click', () => {
+        new Promise((resolve, reject) => {
+          window.a.a
+        })
+      })
+
+      const success = document.querySelector('#success')
+
+      success.addEventListener('click', () => {
+        const xhr = new XMLHttpRequest()
+        xhr.open('GET', '/success?a=1', true)
+        // xhr.responseType = 'json'
+        xhr.onload = function () {
+          console.log(xhr.response)
+        }
+        xhr.send()
+      })
+      const fail = document.querySelector('#fail')
+      function fun() {
+        fun2()
+      }
+      function fun2() {
+        const xhr = new XMLHttpRequest()
+        xhr.open('POST', 'fail', true)
+        xhr.responseType = 'json'
+        xhr.onload = function () {
+          console.log(xhr.response)
+        }
+        xhr.onerror = function (error) {
+          console.log(error)
+        }
+        xhr.send('name=aaa')
+      }
+      fail.addEventListener('click', () => {
+        console.log(1)
+        fun()
+      })
+
+      const fetch1 = document.querySelector('#fetch1')
+      fetch1.addEventListener('click', async () => {
+        let res = await fetch('/fetch1')
+        res.json().then(
+          (res) => {
+            console.log(res)
+          },
+          (err) => {
+            console.log(err)
+          }
+        )
+      })
+      const fetch2 = document.querySelector('#fetch2')
+      fetch2.addEventListener('click', async () => {
+        let res = await fetch('/fetch2', {
+          method: 'POST',
+        })
+      })
+      const btn = document.getElementById('btn')
+      btn.addEventListener('click', () => {
+        document.getElementById('div').innerHTML = ''
+      })
+    </script>
+    <script src="/111.js"></script>
   </body>
 </html>

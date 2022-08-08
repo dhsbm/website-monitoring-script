@@ -1,8 +1,21 @@
 # 用法
 
+## 在监控系统
+
+
 ## 在项目的主入口文件中导入 sdk
 
-`import Tracker from 'sdkPackageName'`
+```html
+<script src="./bundle.js"></script>
+```
+
+## 调用 `setOption` 方法
+```html
+<script>
+  // 下面是默认选项
+  setOption({ id: 1018, closeDebug: false })
+</script>
+```
 
 ### 创建实例
 

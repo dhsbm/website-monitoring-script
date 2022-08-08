@@ -1,4 +1,4 @@
-import { report } from './util'
+import { report, decode } from './util'
 
 // 处理请求拦截和请求异常
 export default function () {
@@ -116,8 +116,8 @@ function formatUrl(url) {
   if (url.indexOf('http') != -1) {
     return url
   } else if (url[0] == '/') {
-    return location.origin + url
+    return decode(location.origin) + url
   } else {
-    return location.origin + '/' + url
+    return decode(location.origin) + '/' + url
   }
 }

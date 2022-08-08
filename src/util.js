@@ -7,9 +7,11 @@ window.setOption = function (option = {}) {
   closeDebug = option.closeDebug
 }
 
+export const decode = (url) => decodeURIComponent(url)
+
 export function report(data) {
   data.web_id = web_id
-  data.url = location.hostname + location.pathname
+  data.url = decode(location.hostname) + decode(location.pathname)
   !closeDebug && console.dir(data)
   // const url = '/database'
   let url = 'http://47.100.57.184:3333/report/'
