@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { report } from './util'
+import { report, decode } from './util'
 
 const areaList = {
   未知: 0,
@@ -40,19 +40,23 @@ const areaList = {
 }
 
 export default function () {
+  let preUrl = decode(location.hostname + location.pathname + location.hash)
   const user = getUser()
   const browser = getBrowser()
   let ip = '0.0.0.0',
     area = 0
   getIp()
+  rewriteHistory()
+  let sign = true // 防抖
   let startTime = Date.now()
-  // @ts-ignore
-  window.addEventListener('hashchange', function (e) {
-    // console.log(e)
+  function hashChange() {
+    if (!sign) return
+    sign = false
     const endTime = Date.now()
     const reportData = {
       kind: 2,
       time: endTime,
+      url: preUrl,
       duration: endTime - startTime,
       browser,
       ip,
@@ -62,19 +66,30 @@ export default function () {
     // console.log(reportData)
     report(reportData)
     startTime = endTime
+    preUrl = decode(location.hostname + location.pathname + location.hash)
+    setTimeout(function () {
+      sign = true
+    }, 10)
+  }
+  window.addEventListener('hashchange', hashChange, {
+    capture: true,
+    passive: true,
   })
-  window.addEventListener('beforeunload', function () {
-    const endTime = Date.now()
-    const reportData = {
-      kind: 2,
-      time: endTime,
-      duration: endTime - startTime,
-      browser,
-      ip,
-      area,
-      user,
-    }
-    report(reportData)
+  window.addEventListener('pushState', hashChange, {
+    capture: true,
+    passive: true,
+  })
+  window.addEventListener('replaceState', hashChange, {
+    capture: true,
+    passive: true,
+  })
+  window.addEventListener('popstate', hashChange, {
+    capture: true,
+    passive: true,
+  })
+  window.addEventListener('beforeunload', hashChange, {
+    capture: true,
+    passive: true,
   })
 
   function getIp() {
@@ -90,6 +105,21 @@ export default function () {
         area = areaList[returnCitySN.cname.slice(0, 2)] || 0
       }
       // console.log(returnCitySN)
+    }
+  }
+
+  function rewriteHistory() {
+    const prePushState = history.pushState
+    history.pushState = function () {
+      const res = prePushState.apply(this, arguments)
+      hashChange()
+      return res
+    }
+    const preReplaceState = history.replaceState
+    history.replaceState = function () {
+      const res = preReplaceState.apply(this, arguments)
+      hashChange()
+      return res
     }
   }
 }
