@@ -1,6 +1,7 @@
 // @ts-nocheck
 import { report, decode } from './util'
 
+// 地区映射
 const areaList = {
   未知: 0,
   吉林: 1,
@@ -40,16 +41,22 @@ const areaList = {
 }
 
 export default function () {
+  // 记录当前路径
   let preUrl = decode(location.hostname + location.pathname + location.hash)
+  // 获取当前用户状态
   const user = getUser()
+  // 获取当前浏览器类型
   const browser = getBrowser()
+  // 获取ip和地址
   let ip = '0.0.0.0',
     area = 0
   getIp()
+  // 重写history的pushState和replaceState
   rewriteHistory()
-  let sign = true // 防抖
+  let sign = true // 防抖，避免重复上报
   let startTime = Date.now()
-  function hashChange() {
+  // 页面改变时的回调
+  function pageChangeHandler() {
     if (!sign) return
     sign = false
     const endTime = Date.now()
@@ -64,34 +71,37 @@ export default function () {
       user,
     }
     // console.log(reportData)
-    report(reportData)
+    report(reportData) // 上报日志
+    // 更新时间与路径
     startTime = endTime
     preUrl = decode(location.hostname + location.pathname + location.hash)
     setTimeout(function () {
       sign = true
     }, 10)
   }
-  window.addEventListener('hashchange', hashChange, {
+  // 监听各种事件
+  window.addEventListener('hashchange', pageChangeHandler, {
     capture: true,
     passive: true,
   })
-  window.addEventListener('pushState', hashChange, {
+  window.addEventListener('pushState', pageChangeHandler, {
     capture: true,
     passive: true,
   })
-  window.addEventListener('replaceState', hashChange, {
+  window.addEventListener('replaceState', pageChangeHandler, {
     capture: true,
     passive: true,
   })
-  window.addEventListener('popstate', hashChange, {
+  window.addEventListener('popstate', pageChangeHandler, {
     capture: true,
     passive: true,
   })
-  window.addEventListener('beforeunload', hashChange, {
+  window.addEventListener('beforeunload', pageChangeHandler, {
     capture: true,
     passive: true,
   })
 
+  // 借助sohu获取ip与地址
   function getIp() {
     const script = document.createElement('script')
     script.type = 'text/javascript'
@@ -108,64 +118,60 @@ export default function () {
     }
   }
 
+  // 重写history的pushState和replaceState
   function rewriteHistory() {
     const prePushState = history.pushState
     history.pushState = function () {
       const res = prePushState.apply(this, arguments)
-      hashChange()
+      pageChangeHandler()
       return res
     }
     const preReplaceState = history.replaceState
     history.replaceState = function () {
       const res = preReplaceState.apply(this, arguments)
-      hashChange()
+      pageChangeHandler()
       return res
     }
   }
 }
 
+// 获取浏览器类型
 function getBrowser() {
   // 获取浏览器 userAgent
-  var ua = navigator.userAgent
+  const ua = navigator.userAgent
   // 是否为 Opera
-  var isOpera = ua.indexOf('Opera') > -1
-  // 返回结果
+  const isOpera = ua.indexOf('Opera') > -1
   if (isOpera) {
     return 5 // Opera
   }
 
   // 是否为 IE
-  var isIE = ua.indexOf('compatible') > -1 && ua.indexOf('MSIE') > -1 && !isOpera
-  var isIE11 = ua.indexOf('Trident') > -1 && ua.indexOf('rv:11.0') > -1
-  // 返回结果
+  const isIE = ua.indexOf('compatible') > -1 && ua.indexOf('MSIE') > -1 && !isOpera
+  const isIE11 = ua.indexOf('Trident') > -1 && ua.indexOf('rv:11.0') > -1
   if (isIE11 || isIE) {
     return 4 // IE11
   }
 
   // 是否为 Edge
-  var isEdge = ua.indexOf('Edg') > -1
-  // 返回结果
+  const isEdge = ua.indexOf('Edg') > -1
   if (isEdge) {
     return 2 // Edge
   }
 
   // 是否为 Firefox
-  var isFirefox = ua.indexOf('Firefox') > -1
-  // 返回结果
+  const isFirefox = ua.indexOf('Firefox') > -1
   if (isFirefox) {
     return 3 // Firefox
   }
 
   // 是否为 Safari
-  var isSafari = ua.indexOf('Safari') > -1 && ua.indexOf('Chrome') == -1
-  // 返回结果
+  const isSafari = ua.indexOf('Safari') > -1 && ua.indexOf('Chrome') == -1
   if (isSafari) {
     return 6 // Safari
   }
 
   // 是否为 Chrome
-  var isChrome = ua.indexOf('Chrome') > -1 && ua.indexOf('Safari') > -1 && ua.indexOf('Edge') == -1
-  // 返回结果
+  const isChrome = ua.indexOf('Chrome') > -1 && ua.indexOf('Safari') > -1 && ua.indexOf('Edge') == -1
   if (isChrome) {
     return 1 // Chrome
   }
@@ -173,6 +179,10 @@ function getBrowser() {
   return 0 // 其他
 }
 
+// 获取当前用户状态
+// 0新用户；
+// 1老用户今日首次登录；
+// 2老用户今日再次登录
 function getUser() {
   const key = '__user__'
   let time = localStorage.getItem(key)

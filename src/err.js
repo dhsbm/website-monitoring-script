@@ -3,6 +3,7 @@ import { report } from './util'
 import { originXML } from './http'
 
 export default function () {
+  // 监控脚本异常与资源加载异常
   window.addEventListener(
     'error',
     function (e) {
@@ -10,17 +11,17 @@ export default function () {
       let reportData
       // 资源加载异常
       if (e.target && (e.target.src || e.target.href)) {
-        const src = getErrorSrc(e.target.src || e.target.href)
+        const fileName = getErrorFileName(e.target.src || e.target.href)
         reportData = {
           kind: 0,
           type: 1,
           time: Date.now(),
-          message: `Not Found: ${src}`,
+          message: `Not Found: ${fileName}`,
           stack: `Not Found: ${e.target.src || e.target.href}`,
         }
         // console.dir(e.target)
       } else {
-        // js异常
+        // 脚本异常
         // console.log(e)
         reportData = {
           kind: 0,
@@ -30,13 +31,13 @@ export default function () {
           stack: formatErrorStack(e.error.stack),
         }
       }
-      report(reportData)
+      report(reportData) // 上报日志
       // console.log(reportData)
       // e.preventDefault()
     },
     true
   )
-  // promise异常
+  // promise异常，归到脚本异常
   window.addEventListener(
     'unhandledrejection',
     function (e) {
@@ -82,12 +83,14 @@ export default function () {
       }
     }
 
-    // 资源加载异常 格外处理css中的异常
+    // 资源加载异常 额外处理css中的异常
     // 通过再发一次请求验证
+    // 提取所有资源列表并过滤
     const entries = performance.getEntriesByType('resource')
     const srcEntries = entries.filter(function (val) {
       return val.initiatorType == 'css'
     })
+    // 重发请求
     for (const item of srcEntries) {
       const xhr = new XMLHttpRequest()
       originXML.open.call(xhr, 'GET', item.name)
@@ -97,12 +100,12 @@ export default function () {
         if (isSuccess(xhr.status)) {
           return
         }
-        // 请求失败
+        // 请求失败 记录为资源异常
         const reportData = {
           kind: 0,
           type: 1,
           time: Date.now(),
-          message: `Not Found: ${getErrorSrc(item.name)}`,
+          message: `Not Found: ${getErrorFileName(item.name)}`,
           stack: `Not Found: ${item.name}`,
         }
         // console.log(reportData)
@@ -113,10 +116,12 @@ export default function () {
   }, 3000)
 }
 
+// 获取异常类型
 function getErrorType(stack) {
   return stack.split('Error:')[0] + 'Error: '
 }
 
+// 处理堆栈信息
 function formatErrorStack(stack) {
   const arr = stack.split('\n')
   return arr
@@ -127,7 +132,8 @@ function formatErrorStack(stack) {
     .join(' ^ ')
 }
 
-function getErrorSrc(src) {
+// 获取资源异常的文件名
+function getErrorFileName(src) {
   const arr = src.split('/')
   return arr[arr.length - 1]
 }

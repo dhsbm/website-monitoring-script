@@ -2,19 +2,21 @@ import { report, decode } from './util'
 
 // 处理请求拦截和请求异常
 export default function () {
-  rewriteXML()
-  window.fetch && rewriteFeact()
+  rewriteXML() // 重写XMLHttpRequest
+  window.fetch && rewriteFeact() // 重写fetch
 }
 
 export const originXML = {}
 
 // 重写XMLHttpRequest
 function rewriteXML() {
+  // 保存原方法
   const originalOpen = XMLHttpRequest.prototype.open
   const originalSend = XMLHttpRequest.prototype.send
   originXML.open = originalOpen
   originXML.send = originalSend
   const originalProto = XMLHttpRequest.prototype
+  // 记录请求方法与请求路径
   let cacheWay, cacheUrl
   // 重写open方法
   originalProto.open = function newOpen(...args) {
@@ -25,7 +27,7 @@ function rewriteXML() {
   // 重写send方法
   originalProto.send = function newSend(...args) {
     const startTime = Date.now()
-    // 立刻读取url和way，省的请求回来前发了下一个请求，被覆盖
+    // 立刻保存url和way，避免请求回来前发下一个请求，被覆盖
     const url = cacheUrl
     const way = cacheWay
     const onLoadend = function () {
@@ -43,11 +45,11 @@ function rewriteXML() {
         res_time: endTime - startTime,
         res_body: this.response ? this.response : this.statusText,
       }
-      report(reportData)
+      report(reportData) // 上报日志
       // console.log(reportData)
       this.removeEventListener('loadend', onLoadend, true)
 
-      // 上报接口异常
+      // 请求失败，上报接口异常
       if (!success) {
         const reportData = {
           kind: 0,
@@ -62,23 +64,20 @@ function rewriteXML() {
     }
 
     this.addEventListener('loadend', onLoadend, true)
-
     return originalSend.apply(this, args)
   }
 }
 
-const obj = {}
-
-// 重写fetch
+// 重写fetch函数
 function rewriteFeact() {
   const originalFetch = window.fetch
   window.fetch = function newFetch(url, config) {
     const startTime = Date.now()
     return originalFetch(url, config).then(function (res) {
-      // 请求采集请求数据
+      // 采集请求数据
       res
-        .clone()
-        .text()
+        .clone() // 返回数据只能读取一次，需要先克隆
+        .text() // 转换成文本
         .then(function (data) {
           const endTime = Date.now()
           const success = isSuccess(res.status)
@@ -93,7 +92,8 @@ function rewriteFeact() {
             res_body: data,
           }
           // console.log(reportData)
-          report(reportData)
+          report(reportData) // 上报日志
+
           // 采集接口异常
           if (!success) {
             const reportData = {
@@ -104,7 +104,7 @@ function rewriteFeact() {
               stack: `Failed when requesting ${res.url}`,
             }
             // console.log(reportData)
-            report(reportData)
+            report(reportData) // 上报日志
           }
         })
       return res

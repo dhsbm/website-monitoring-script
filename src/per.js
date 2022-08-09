@@ -2,7 +2,7 @@
 import { report } from './util'
 
 export default function () {
-  let lcp
+  let lcp // 最大元素渲染时间
   new PerformanceObserver(function (entryList, observer) {
     let perfEntries = entryList.getEntries()
     lcp = perfEntries[0].startTime
@@ -12,12 +12,12 @@ export default function () {
   setTimeout(function () {
     const { fetchStart, domContentLoadedEventEnd, loadEventEnd, domainLookupStart, domainLookupEnd } =
       window.performance.timing
-    const dns = (domainLookupEnd - domainLookupStart) | 0
-    const dcl = (domContentLoadedEventEnd - fetchStart) | 0
-    const l = (loadEventEnd - fetchStart) | 0
-    let fp = performance.getEntriesByName('first-paint')[0]
+    const dns = (domainLookupEnd - domainLookupStart) | 0 // dns解析
+    const dcl = (domContentLoadedEventEnd - fetchStart) | 0 // dom ready
+    const l = (loadEventEnd - fetchStart) | 0 // onload
+    let fp = performance.getEntriesByName('first-paint')[0] // 首屏渲染时间
     fp = fp ? fp.startTime | 0 : dcl
-    let fcp = performance.getEntriesByName('first-contentful-paint')[0]
+    let fcp = performance.getEntriesByName('first-contentful-paint')[0] // 首次内容渲染时间
     fcp = fcp ? fp.startTime | 0 : fp
     const reportData = {
       kind: 1,
@@ -29,10 +29,11 @@ export default function () {
       dcl: dcl,
       l: l,
     }
-    report(reportData)
+    report(reportData) // 上报日志
     // console.log(reportData)
   }, 3000)
 }
+
 // 暂未采集的指标
 // let fmp // 最有意义的元素渲染
 // new PerformanceObserver((entryList, observer) => {
