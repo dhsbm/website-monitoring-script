@@ -67,6 +67,8 @@ function rewriteXML() {
   }
 }
 
+const obj = {}
+
 // 重写fetch
 function rewriteFeact() {
   const originalFetch = window.fetch
@@ -74,33 +76,37 @@ function rewriteFeact() {
     const startTime = Date.now()
     return originalFetch(url, config).then(function (res) {
       // 请求采集请求数据
-      const endTime = Date.now()
-      const success = isSuccess(res.status)
-      const reportData = {
-        kind: 3,
-        time: startTime,
-        send_url: res.url,
-        way: (config ? config.method : 'GET').toUpperCase(),
-        success: success ? 0 : 1,
-        status: res.status,
-        res_time: endTime - startTime,
-        res_body: 'fetch请求无法读取返回信息',
-      }
-      // console.log(reportData)
-      report(reportData)
-
-      // 采集接口异常
-      if (!success) {
-        const reportData = {
-          kind: 0,
-          type: 2,
-          time: endTime,
-          message: `${res.status} ${res.statusText}`,
-          stack: `Failed when requesting ${res.url}`,
-        }
-        // console.log(reportData)
-        report(reportData)
-      }
+      res
+        .clone()
+        .text()
+        .then(function (data) {
+          const endTime = Date.now()
+          const success = isSuccess(res.status)
+          const reportData = {
+            kind: 3,
+            time: startTime,
+            send_url: res.url,
+            way: (config ? config.method : 'GET').toUpperCase(),
+            success: success ? 0 : 1,
+            status: res.status,
+            res_time: endTime - startTime,
+            res_body: data,
+          }
+          // console.log(reportData)
+          report(reportData)
+          // 采集接口异常
+          if (!success) {
+            const reportData = {
+              kind: 0,
+              type: 2,
+              time: endTime,
+              message: `${res.status} ${res.statusText}`,
+              stack: `Failed when requesting ${res.url}`,
+            }
+            // console.log(reportData)
+            report(reportData)
+          }
+        })
       return res
     })
   }

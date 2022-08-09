@@ -7,9 +7,9 @@
     <script src="/monitoring.js"></script>
     <style>
       /* 没找到检测的方法 */
-      div {
-        /* background: url('./css.png'); */
-      }
+      /* div {
+        background: url('./css.png');
+      } */
       body {
         background-color: #eee;
       }
@@ -23,14 +23,15 @@
   <body>
     <button id="err">产生异常</button>
     <button id="err2">产生promise异常</button>
+    <button id="srcErr">产生资源异常</button>
     <button id="success">发送成功请求</button>
     <button id="fail">发送失败请求</button>
     <button id="fetch1">发送fetch成功请求</button>
     <button id="fetch2">发送fetch失败请求</button>
     <button id="btn">清空全屏元素（产生白屏异常,需在3秒内点击）</button>
+
     <div id="div">
       <div class="red"></div>
-
       <div><span>12345</span></div>
       <div><span>12345</span></div>
       <h1 elementtiming="meaningful">最有意义的元素</h1>
@@ -39,15 +40,28 @@
       <div><span>12345</span></div>
       <div class="red">12345</div>
     </div>
-    <!-- <img src="a.png" alt="" /> -->
+    <img src="" alt="" id="img" />
     <script>
       const err = document.querySelector('#err')
       function fun() {
         fun2()
       }
       function fun2() {
-        const a = 1
-        a++
+        const a = (Math.random() * 6) | 0
+        switch (a) {
+          case 0:
+            a++
+          case 1:
+            a.b.c = 2
+          case 2:
+            new Symbol()
+          case 3:
+            new Proxy()
+          case 4:
+            let b = 1n + 1
+          case 5:
+            throw Error('自定义错误')
+        }
       }
       err.addEventListener('click', () => {
         fun()
@@ -57,6 +71,11 @@
         new Promise((resolve, reject) => {
           window.a.a
         })
+      })
+      const err3 = document.getElementById('srcErr')
+      err3.addEventListener('click', () => {
+        const a = (Math.random() * 7) | 0
+        img.src = ['img1.png', 'b.jpg', 'c.webp', 'd.png', 'e.gif', 'f.bmp', 'g.svg'][a]
       })
 
       const success = document.querySelector('#success')
@@ -87,7 +106,7 @@
       const fetch1 = document.querySelector('#fetch1')
       fetch1.addEventListener('click', async () => {
         let res = await fetch('/fetch1')
-        res.json().then(
+        res.text().then(
           (res) => {
             console.log(res)
           },
