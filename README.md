@@ -16,12 +16,12 @@
 ## 配置网站ID
 调用 `setOption` 方法，传入一个配置对象：
 * id: 网站ID
-* closeDebug: 是否关闭控制台的日志输出(测试)
+* showDebug: 上报日志的同时是否在控制台打印(用于测试)
 
 ```html
 <script>
   // 下面是默认选项
-  setOption({ id: 1018, closeDebug: false })
+  setOption({ id: 1018, showDebug: false })
 </script>
 ```
 
