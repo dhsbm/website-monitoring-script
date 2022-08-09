@@ -8,7 +8,7 @@
     <style>
       /* 没找到检测的方法 */
       div {
-        background: url('./css.png');
+        /* background: url('./css.png'); */
       }
       body {
         background-color: #eee;
@@ -39,7 +39,7 @@
       <div><span>12345</span></div>
       <div class="red">12345</div>
     </div>
-    <img src="a.png" alt="" />
+    <!-- <img src="a.png" alt="" /> -->
     <script>
       const err = document.querySelector('#err')
       function fun() {
@@ -71,10 +71,7 @@
         xhr.send()
       })
       const fail = document.querySelector('#fail')
-      function fun() {
-        fun2()
-      }
-      function fun2() {
+      fail.addEventListener('click', () => {
         const xhr = new XMLHttpRequest()
         xhr.open('POST', 'fail', true)
         xhr.responseType = 'json'
@@ -85,10 +82,6 @@
           console.log(error)
         }
         xhr.send('name=aaa')
-      }
-      fail.addEventListener('click', () => {
-        console.log(1)
-        fun()
       })
 
       const fetch1 = document.querySelector('#fetch1')
@@ -114,6 +107,6 @@
         document.getElementById('div').innerHTML = ''
       })
     </script>
-    <script src="/111.js"></script>
+    <!-- <script src="/111.js"></script> -->
   </body>
 </html>

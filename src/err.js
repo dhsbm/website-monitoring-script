@@ -21,6 +21,7 @@ export default function () {
         // console.dir(e.target)
       } else {
         // js异常
+        // console.log(e)
         reportData = {
           kind: 0,
           type: 0,
@@ -113,7 +114,7 @@ export default function () {
 }
 
 function getErrorType(stack) {
-  return stack.split(':')[0] + ': '
+  return stack.split('Error:')[0] + 'Error: '
 }
 
 function formatErrorStack(stack) {
