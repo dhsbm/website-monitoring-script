@@ -13,7 +13,8 @@ export const decode = function (url) {
 }
 export function report(data) {
   data.web_id = web_id
-  data.url = decode(location.hostname) + decode(location.pathname)
+  console.log(location)
+  data.url = decode(location.hostname + location.pathname + location.hash)
   !closeDebug && console.dir(data)
   // const url = '/database'
   let url = 'http://47.100.57.184:3333/report/'
