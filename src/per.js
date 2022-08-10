@@ -3,11 +3,11 @@ import { report } from './util'
 
 export default function () {
   let lcp // 最大元素渲染时间
-  new PerformanceObserver(function (entryList, observer) {
+  let observer = new PerformanceObserver(function (entryList) {
     let perfEntries = entryList.getEntries()
-    lcp = perfEntries[0].startTime
-    observer.disconnect()
-  }).observe({ entryTypes: ['largest-contentful-paint'] })
+    lcp = perfEntries[0].startTime | 0
+  })
+  observer.observe({ entryTypes: ['largest-contentful-paint'] })
   // 绑定在load事件上，然后使用定时器执行
   window.addEventListener('load', function () {
     setTimeout(function () {
@@ -19,7 +19,7 @@ export default function () {
       let fp = performance.getEntriesByName('first-paint')[0] // 首屏渲染时间
       fp = fp ? fp.startTime | 0 : dcl
       let fcp = performance.getEntriesByName('first-contentful-paint')[0] // 首次内容渲染时间
-      fcp = fcp ? fp.startTime | 0 : fp
+      fcp = fcp ? fcp.startTime | 0 : fp
       const reportData = {
         kind: 1,
         time: Date.now(),
@@ -30,6 +30,8 @@ export default function () {
         dcl: dcl,
         l: l,
       }
+      observer.disconnect() // 停止监听最大元素的渲染
+
       report(reportData) // 上报日志
       // console.log(reportData)
     }, 1000)

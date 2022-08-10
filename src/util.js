@@ -19,22 +19,30 @@ export function report(data) {
   data.web_id = web_id
   // 采集路径，行为日志需要使用跳转前的路径
   if (data.kind != 2) data.url = decode(location.hostname + location.pathname + location.hash)
-  showDebug && console.dir(data)
+
   // const url = '/database'
+  let tip = ''
   let url = 'http://47.100.57.184:3333/report/'
   switch (data.kind) {
     case 0:
       url += 'err'
+      tip = 'err: '
       break
     case 1:
       url += 'per'
+      tip = 'per: '
       break
     case 2:
       url += 'beh'
+      tip = 'beh: '
       break
     case 3:
       url += 'http'
+      tip = 'http: '
       break
+  }
+  if (showDebug) {
+    showDebug && console.log(tip, data)
   }
   const xhr = new _XMLHttpRequest()
   originXML.open.call(xhr, 'POST', url, true)
