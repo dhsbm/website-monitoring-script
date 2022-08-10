@@ -55,35 +55,8 @@ export default function () {
     true
   )
 
-  setTimeout(function () {
-    // 白屏异常
-    const width = window.innerWidth
-    const height = window.innerHeight
-    let emptyPoints = 18
-    for (let i = 1; i < 10; i++) {
-      isWapper(document.elementsFromPoint(width / 2, (height / 10) * i)[0])
-      isWapper(document.elementsFromPoint((width / 10) * i, height / 2)[0])
-    }
-    // 全屏没有元素，触发白屏异常
-    if (emptyPoints == 18) {
-      const reportData = {
-        kind: 0,
-        type: 3,
-        time: Date.now(),
-        message: 'White screen',
-        stack: 'No DOM rendering for three seconds',
-      }
-      // console.log(reportData)
-      report(reportData)
-    }
-    function isWapper(dom) {
-      const tagName = dom.tagName
-      if (tagName != 'HTML' && tagName != 'BODY') {
-        emptyPoints--
-      }
-    }
-
-    // 资源加载异常 额外处理css中的异常
+  // 资源加载异常 额外处理css中的异常
+  window.addEventListener('load', function () {
     // 通过再发一次请求验证
     // 提取所有资源列表并过滤
     const entries = performance.getEntriesByType('resource')
@@ -113,16 +86,47 @@ export default function () {
       }
       xhr.addEventListener('loadend', onLoadend)
     }
+  })
+
+  // 白屏异常
+  setTimeout(function () {
+    const width = window.innerWidth
+    const height = window.innerHeight
+    let emptyPoints = 18
+    for (let i = 1; i < 10; i++) {
+      isWapper(document.elementsFromPoint(width / 2, (height / 10) * i)[0])
+      isWapper(document.elementsFromPoint((width / 10) * i, height / 2)[0])
+    }
+    // 全屏没有元素，触发白屏异常
+    if (emptyPoints == 18) {
+      const reportData = {
+        kind: 0,
+        type: 3,
+        time: Date.now(),
+        message: 'White screen',
+        stack: 'No DOM rendering for three seconds',
+      }
+      // console.log(reportData)
+      report(reportData)
+    }
+    function isWapper(dom) {
+      const tagName = dom.tagName
+      if (tagName != 'HTML' && tagName != 'BODY') {
+        emptyPoints--
+      }
+    }
   }, 3000)
 }
 
 // 获取异常类型
 function getErrorType(stack) {
+  if (!stack) return 'Error: '
   return stack.split('Error:')[0] + 'Error: '
 }
 
 // 处理堆栈信息
 function formatErrorStack(stack) {
+  if (!stack) return ''
   const arr = stack.split('\n')
   return arr
     .slice(1)
@@ -134,6 +138,7 @@ function formatErrorStack(stack) {
 
 // 获取资源异常的文件名
 function getErrorFileName(src) {
+  if (!stack) return ''
   const arr = src.split('/')
   return arr[arr.length - 1]
 }

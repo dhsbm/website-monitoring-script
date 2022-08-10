@@ -8,30 +8,32 @@ export default function () {
     lcp = perfEntries[0].startTime
     observer.disconnect()
   }).observe({ entryTypes: ['largest-contentful-paint'] })
-
-  setTimeout(function () {
-    const { fetchStart, domContentLoadedEventEnd, loadEventEnd, domainLookupStart, domainLookupEnd } =
-      window.performance.timing
-    const dns = (domainLookupEnd - domainLookupStart) | 0 // dns解析
-    const dcl = (domContentLoadedEventEnd - fetchStart) | 0 // dom ready
-    const l = (loadEventEnd - fetchStart) | 0 // onload
-    let fp = performance.getEntriesByName('first-paint')[0] // 首屏渲染时间
-    fp = fp ? fp.startTime | 0 : dcl
-    let fcp = performance.getEntriesByName('first-contentful-paint')[0] // 首次内容渲染时间
-    fcp = fcp ? fp.startTime | 0 : fp
-    const reportData = {
-      kind: 1,
-      time: Date.now(),
-      dns: dns | 0,
-      fp: fp,
-      fcp: fcp,
-      lcp: lcp || fcp || dcl,
-      dcl: dcl,
-      l: l,
-    }
-    report(reportData) // 上报日志
-    // console.log(reportData)
-  }, 3000)
+  // 绑定在load事件上，然后使用定时器执行
+  window.addEventListener('load', function () {
+    setTimeout(function () {
+      const { fetchStart, domContentLoadedEventEnd, loadEventEnd, domainLookupStart, domainLookupEnd } =
+        window.performance.timing
+      const dns = (domainLookupEnd - domainLookupStart) | 0 // dns解析
+      const dcl = (domContentLoadedEventEnd - fetchStart) | 0 // dom ready
+      const l = (loadEventEnd - fetchStart) | 0 // onload
+      let fp = performance.getEntriesByName('first-paint')[0] // 首屏渲染时间
+      fp = fp ? fp.startTime | 0 : dcl
+      let fcp = performance.getEntriesByName('first-contentful-paint')[0] // 首次内容渲染时间
+      fcp = fcp ? fp.startTime | 0 : fp
+      const reportData = {
+        kind: 1,
+        time: Date.now(),
+        dns: dns | 0,
+        fp: fp,
+        fcp: fcp,
+        lcp: lcp || fcp || dcl,
+        dcl: dcl,
+        l: l,
+      }
+      report(reportData) // 上报日志
+      // console.log(reportData)
+    }, 1000)
+  })
 }
 
 // 暂未采集的指标

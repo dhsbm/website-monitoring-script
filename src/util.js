@@ -4,7 +4,7 @@ import { originXML } from './http'
 const _XMLHttpRequest = window.XMLHttpRequest
 
 let web_id = 1018
-let showDebug = false
+let showDebug = true
 // 公开选项设置
 window.setOption = function (option = {}) {
   web_id = option.id || 1018
