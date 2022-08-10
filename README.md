@@ -21,7 +21,7 @@
 ```html
 <script>
   // 下面是默认选项
-  setOption({ id: 1018, showDebug: false })
+  setOption({ id: 1018, showDebug: true })
 </script>
 ```
 

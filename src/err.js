@@ -27,7 +27,7 @@ export default function () {
           kind: 0,
           type: 0,
           time: Date.now(),
-          message: getErrorType(e.error.stack) + e.error.message,
+          message: e.error.name + ': ' + e.error.message,
           stack: formatErrorStack(e.error.stack),
         }
       }
@@ -45,7 +45,7 @@ export default function () {
         kind: 0,
         type: 0,
         time: Date.now(),
-        message: getErrorType(e.reason.stack) + e.reason.message,
+        message: e.reason.name + ': ' + e.reason.message,
         stack: formatErrorStack(e.reason.stack),
       }
       report(reportData)
@@ -118,12 +118,6 @@ export default function () {
   }, 3000)
 }
 
-// 获取异常类型
-function getErrorType(stack) {
-  if (!stack) return 'Error: '
-  return stack.split('Error:')[0] + 'Error: '
-}
-
 // 处理堆栈信息
 function formatErrorStack(stack) {
   if (!stack) return ''
@@ -138,7 +132,7 @@ function formatErrorStack(stack) {
 
 // 获取资源异常的文件名
 function getErrorFileName(src) {
-  if (!stack) return ''
+  if (!src) return ''
   const arr = src.split('/')
   return arr[arr.length - 1]
 }
