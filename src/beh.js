@@ -192,7 +192,7 @@ function getUser() {
   } else {
     const d1 = new Date(parseInt(time))
     const d2 = new Date()
-    if (d1.getDay() != d2.getDate()) {
+    if (d1.getDay() != d2.getDay() || d1 - d2 > 24 * 3600 * 1000) {
       return 1
     } else {
       return 2

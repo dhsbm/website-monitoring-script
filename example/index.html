@@ -37,13 +37,18 @@
       <input type="text" />
       <img src="./vue源码分析.jpg" alt="vue源码分析" style="width: 200px; height: 100px" />
       <img src="./性能监控系统.jpg" alt="性能监控系统" style="width: 200px; height: 100px" />
-      <img src="./响应式逻辑.jpg" alt="响应式逻辑" style="width: 600px; height: 400px" />
+      <div id="img"></div>
+      <!-- <img src="./响应式逻辑.jpg" alt="响应式逻辑" style="width: 600px; height: 400px" /> -->
       <div><span>12345</span></div>
       <div><span>12345</span></div>
       <div class="red">12345</div>
     </div>
     <img alt="" id="img" />
     <script>
+      setTimeout(() => {
+        const dom = document.getElementById('img')
+        dom.innerHTML = '<img src="./响应式逻辑.jpg" alt="响应式逻辑" style="width: 600px; height: 400px" />'
+      }, 500)
       const err = document.querySelector('#err')
       function fun() {
         fun2()
