@@ -186,16 +186,19 @@ function getBrowser() {
 function getUser() {
   const key = '__user__'
   let time = localStorage.getItem(key)
+  let res
   if (!time) {
-    localStorage.setItem(key, Date.now().toString())
-    return 0
+    res = 0 // 新用户
   } else {
     const d1 = new Date(parseInt(time))
     const d2 = new Date()
-    if (d1.getDay() != d2.getDay() || d1 - d2 > 24 * 3600 * 1000) {
-      return 1
+    if (d1.getDay() == d2.getDay() && d1 - d2 < 24 * 3600 * 1000) {
+      res = 2 // 老用户今日再次登录
     } else {
-      return 2
+      res = 1 // 老用户今日首次登录
     }
   }
+  // 更新数据
+  localStorage.setItem(key, Date.now().toString())
+  return res
 }
