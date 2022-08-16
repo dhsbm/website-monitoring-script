@@ -42,7 +42,7 @@ export function report(data) {
       break
   }
   if (showDebug) {
-    showDebug && console.log(tip, data)
+    console.log(tip, data)
   }
   const xhr = new _XMLHttpRequest()
   originXML.open.call(xhr, 'POST', url, true)

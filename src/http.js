@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { report, decode } from './util'
 
 // 处理请求拦截和请求异常
@@ -19,13 +20,13 @@ function rewriteXML() {
   // 记录请求方法与请求路径
   let cacheWay, cacheUrl
   // 重写open方法
-  originalProto.open = function newOpen(...args) {
-    cacheWay = args[0].toUpperCase()
-    cacheUrl = formatUrl(args[1])
-    return originalOpen.apply(this, args)
+  originalProto.open = function newOpen() {
+    cacheWay = arguments[0].toUpperCase()
+    cacheUrl = formatUrl(arguments[1])
+    return originalOpen.apply(this, arguments)
   }
   // 重写send方法
-  originalProto.send = function newSend(...args) {
+  originalProto.send = function newSend() {
     const startTime = Date.now()
     // 立刻保存url和way，避免请求回来前发下一个请求，被覆盖
     const url = cacheUrl
@@ -64,7 +65,7 @@ function rewriteXML() {
     }
 
     this.addEventListener('loadend', onLoadend, true)
-    return originalSend.apply(this, args)
+    return originalSend.apply(this, arguments)
   }
 }
 
