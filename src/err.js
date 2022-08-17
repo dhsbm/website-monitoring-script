@@ -7,33 +7,28 @@ export default function () {
   window.addEventListener(
     'error',
     function (e) {
-      // console.log(e)
       let reportData
-      // 资源加载异常
       if (e.target && (e.target.src || e.target.href)) {
+        // 资源加载异常
         const fileName = getErrorFileName(e.target.src || e.target.href)
         reportData = {
-          kind: 0,
-          type: 1,
-          time: Date.now(),
-          message: `Not Found: ${fileName}`,
-          stack: `Not Found: ${e.target.src || e.target.href}`,
+          kind: 0, // 异常日志
+          type: 1, // 资源异常
+          time: Date.now(), // 异常的发生时间
+          message: `Not Found: ${fileName}`, // 报错信息
+          stack: `Not Found: ${e.target.src || e.target.href}`, // 异常堆栈
         }
-        // console.dir(e.target)
       } else {
         // 脚本异常
-        // console.log(e)
         reportData = {
-          kind: 0,
-          type: 0,
-          time: Date.now(),
-          message: e.error.name + ': ' + e.error.message,
-          stack: formatErrorStack(e.error.stack),
+          kind: 0, // 异常日志
+          type: 0, // 脚本异常
+          time: Date.now(), // 异常的发生时间
+          message: e.error.name + ': ' + e.error.message, // 报错信息
+          stack: formatErrorStack(e.error.stack), // 堆栈信息
         }
       }
       report(reportData) // 上报日志
-      // console.log(reportData)
-      // e.preventDefault()
     },
     true
   )
@@ -42,22 +37,19 @@ export default function () {
     'unhandledrejection',
     function (e) {
       const reportData = {
-        kind: 0,
-        type: 0,
-        time: Date.now(),
-        message: e.reason.name + ': ' + e.reason.message,
-        stack: formatErrorStack(e.reason.stack),
+        kind: 0, // 异常日志
+        type: 0, // 脚本异常
+        time: Date.now(), // 异常的发生时间
+        message: e.reason.name + ': ' + e.reason.message, // 报错信息
+        stack: formatErrorStack(e.reason.stack), // 堆栈信息
       }
       report(reportData)
-      // console.log(reportData)
-      // e.preventDefault()
     },
     true
   )
 
-  // 资源加载异常 额外处理css中的异常
+  // 额外处理css中的资源异常，通过再发一次请求验证
   window.addEventListener('load', function () {
-    // 通过再发一次请求验证
     // 提取所有资源列表并过滤
     const entries = performance.getEntriesByType('resource')
     const srcEntries = entries.filter(function (val) {
@@ -75,13 +67,12 @@ export default function () {
         }
         // 请求失败 记录为资源异常
         const reportData = {
-          kind: 0,
-          type: 1,
-          time: Date.now(),
-          message: `Not Found: ${getErrorFileName(item.name)}`,
-          stack: `Not Found: ${item.name}`,
+          kind: 0, // 异常日志
+          type: 1, // 接口异常
+          time: Date.now(), // 异常的发生时间
+          message: `Not Found: ${getErrorFileName(item.name)}`, // 报错信息
+          stack: `Not Found: ${item.name}`, // 异常堆栈
         }
-        // console.log(reportData)
         report(reportData)
       }
       xhr.addEventListener('loadend', onLoadend)
@@ -92,24 +83,25 @@ export default function () {
   setTimeout(function () {
     const width = window.innerWidth
     const height = window.innerHeight
-    let emptyPoints = 18
+    let emptyPoints = 18 // 空白点数
+    // 页面中轴上的18个点，检测是否有元素渲染
     for (let i = 1; i < 10; i++) {
-      isWapper(document.elementsFromPoint(width / 2, (height / 10) * i)[0])
-      isWapper(document.elementsFromPoint((width / 10) * i, height / 2)[0])
+      isWrapper(document.elementsFromPoint(width / 2, (height / 10) * i)[0])
+      isWrapper(document.elementsFromPoint((width / 10) * i, height / 2)[0])
     }
-    // 全屏没有元素，触发白屏异常
+    // 页面中轴上没有元素，触发白屏异常
     if (emptyPoints == 18) {
       const reportData = {
-        kind: 0,
-        type: 3,
-        time: Date.now(),
-        message: 'White screen',
-        stack: 'No DOM rendering for three seconds',
+        kind: 0, // 异常日志
+        type: 3, // 白屏异常
+        time: Date.now(), // 发生异常的时间
+        message: 'White screen', // 异常信息
+        stack: 'No DOM rendering for three seconds', // 异常堆栈
       }
-      // console.log(reportData)
       report(reportData)
     }
-    function isWapper(dom) {
+    // 检测坐标元素是否不为HTML和BODY
+    function isWrapper(dom) {
       const tagName = dom.tagName
       if (tagName != 'HTML' && tagName != 'BODY') {
         emptyPoints--

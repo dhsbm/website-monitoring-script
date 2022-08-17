@@ -41,6 +41,8 @@ const areaList = {
 }
 
 export default function () {
+  // 访问时间
+  let startTime = Date.now()
   // 记录当前路径
   let preUrl = decode(location.hostname + location.pathname + location.hash)
   // 获取当前用户状态
@@ -53,31 +55,31 @@ export default function () {
   getIp()
   // 重写history的pushState和replaceState
   rewriteHistory()
-  let sign = true // 防抖，避免重复上报
-  let startTime = Date.now()
+
+  let sign = true // 节流，避免重复上报
   // 页面改变时的回调
   function pageChangeHandler() {
     if (!sign) return
     sign = false
-    const endTime = Date.now()
+    setTimeout(function () {
+      sign = true
+    }, 100)
+
+    const endTime = Date.now() // 离开时间
     const reportData = {
-      kind: 2,
-      time: endTime,
-      url: preUrl,
-      duration: endTime - startTime,
-      browser,
-      ip,
-      area,
-      user,
+      kind: 2, // 行为日志
+      time: endTime, // 上报事件
+      url: preUrl, // 页面路径
+      duration: endTime - startTime, // 停留时间
+      browser, // 用户浏览器
+      ip, // 用户ip
+      area, // 用户地区
+      user, // 区分pv/uv
     }
-    // console.log(reportData)
     report(reportData) // 上报日志
     // 更新时间与路径
     startTime = endTime
     preUrl = decode(location.hostname + location.pathname + location.hash)
-    setTimeout(function () {
-      sign = true
-    }, 10)
   }
   // 监听各种事件
   window.addEventListener('hashchange', pageChangeHandler, {
@@ -101,20 +103,22 @@ export default function () {
     passive: true,
   })
 
-  // 借助sohu获取ip与地址
+  // 借助sohu获取ip与地区
   function getIp() {
+    // 规避跨域问题
     const script = document.createElement('script')
     script.type = 'text/javascript'
     script.src = 'http://pv.sohu.com/cityjson'
     document.head.appendChild(script)
+
     script.onload = function () {
+      // js执行完，获取ip与地区
       if (returnCitySN && returnCitySN.cip) {
         ip = returnCitySN.cip
       }
       if (returnCitySN && returnCitySN.cname) {
         area = areaList[returnCitySN.cname.slice(0, 2)] || 0
       }
-      // console.log(returnCitySN)
     }
   }
 

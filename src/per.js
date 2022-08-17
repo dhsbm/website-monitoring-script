@@ -4,15 +4,21 @@ import { report } from './util'
 export default function () {
   let lcp // 最大元素渲染时间
   let observer = new PerformanceObserver(function (entryList) {
+    // 每次最大元素被替换，更新时间
     let perfEntries = entryList.getEntries()
     lcp = perfEntries[0].startTime | 0
   })
-  observer.observe({ entryTypes: ['largest-contentful-paint'] })
+  observer.observe({ entryTypes: ['largest-contentful-paint'] }) // 监听最大元素更新
   // 绑定在load事件上，然后使用定时器执行
   window.addEventListener('load', function () {
     setTimeout(function () {
-      const { fetchStart, domContentLoadedEventEnd, loadEventEnd, domainLookupStart, domainLookupEnd } =
-        window.performance.timing
+      const {
+        domainLookupStart, // dns 解析开始
+        domainLookupEnd, // dns 解析结束
+        fetchStart, // 页面请求发送
+        domContentLoadedEventEnd, // dom完全加载
+        loadEventEnd, // 页面完全加载
+      } = performance.timing
       const dns = (domainLookupEnd - domainLookupStart) | 0 // dns解析
       const dcl = (domContentLoadedEventEnd - fetchStart) | 0 // dom ready
       const l = (loadEventEnd - fetchStart) | 0 // onload
@@ -30,10 +36,8 @@ export default function () {
         dcl: dcl,
         l: l,
       }
-      observer.disconnect() // 停止监听最大元素的渲染
-
       report(reportData) // 上报日志
-      // console.log(reportData)
+      observer.disconnect() // 停止监听最大元素的渲染
     }, 1000)
   })
 }

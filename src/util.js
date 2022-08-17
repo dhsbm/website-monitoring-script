@@ -22,7 +22,8 @@ export function report(data) {
 
   // const url = '/database'
   let tip = ''
-  let url = 'http://47.100.57.184:3333/report/'
+  let url = 'http://47.100.57.184:3333/report/' // 上报路径
+  // 根据错误类型，请求发往不同的路径
   switch (data.kind) {
     case 0:
       url += 'err'
@@ -44,9 +45,8 @@ export function report(data) {
   if (showDebug) {
     console.log(tip, data)
   }
+  // 避免无限请求，使用原生方法
   const xhr = new _XMLHttpRequest()
   originXML.open.call(xhr, 'POST', url, true)
   originXML.send.call(xhr, JSON.stringify(data))
-  // xhr.open('POST', url, true)
-  // xhr.send(data)
 }
