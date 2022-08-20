@@ -67,7 +67,7 @@ pnpm run dev
 ## 模拟服务器
 本项目用 webpack 中间件实现请求响应的模拟，详情间 webpack.config.js 中的配置
 
-## 打包
+## 脚本打包
 ```shell
 pnpm run build
 ```
