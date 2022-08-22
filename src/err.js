@@ -49,18 +49,13 @@ export default function () {
   )
 
   // 额外处理css中的资源异常，通过再发一次请求验证
-  window.addEventListener('load', function () {
-    // 提取所有资源列表并过滤
-    const entries = performance.getEntriesByType('resource')
-    const srcEntries = entries.filter(function (val) {
-      return val.initiatorType == 'css'
-    })
-    // 重发请求
-    for (const item of srcEntries) {
+  new PerformanceObserver(function (entryList, observer) {
+    let entry = entryList.getEntries()[0]
+    if (entry.initiatorType == 'css') {
       const xhr = new XMLHttpRequest()
-      originXML.open.call(xhr, 'GET', item.name)
+      originXML.open.call(xhr, 'GET', entry.name)
       originXML.send.call(xhr)
-
+      xhr.addEventListener('loadend', onLoadend)
       function onLoadend() {
         if (isSuccess(xhr.status)) {
           return
@@ -70,14 +65,13 @@ export default function () {
           kind: 0, // 异常日志
           type: 1, // 接口异常
           time: Date.now(), // 异常的发生时间
-          message: `Not Found: ${getErrorFileName(item.name)}`, // 报错信息
-          stack: `Not Found: ${item.name}`, // 异常堆栈
+          message: `Not Found: ${getErrorFileName(entry.name)}`, // 报错信息
+          stack: `Not Found: ${entry.name}`, // 异常堆栈
         }
         report(reportData)
       }
-      xhr.addEventListener('loadend', onLoadend)
     }
-  })
+  }).observe({ entryTypes: ['resource'] })
 
   // 白屏异常
   setTimeout(function () {
